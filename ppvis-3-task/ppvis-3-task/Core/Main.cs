@@ -17,6 +17,7 @@ namespace Core
         {
             var temperatureQuestion = new NumericQuestion("Your temperature");
             var abcQuestion = new SingleVariantQuestion("Choose one result (1, 2, 3)");
+            var abcMultipleQuestion = new MultipleVariantsQuestion("Choose multiple results (1, 2, 3)");
 
             var temperatureValidator1 = new RangeNumericValidator(36f, 37.5f, temperatureQuestion);
             var temperatureValidator2 = new RangeNumericValidator(37f, 38f, temperatureQuestion);
@@ -28,27 +29,36 @@ namespace Core
             var abcValidator3 = new SingleVariantValidator(3, abcQuestion);
             var abcValidator4 = new SingleVariantValidator(1, abcQuestion);
 
+            var abcMultipleValidator1 = new MultipleVariantsValidator(new[] { 1, 2 }, abcMultipleQuestion);
+            var abcMultipleValidator2 = new MultipleVariantsValidator(new[] { 2, 3 }, abcMultipleQuestion);
+            var abcMultipleValidator3 = new MultipleVariantsValidator(new[] { 1, 3 }, abcMultipleQuestion);
+            var abcMultipleValidator4 = new MultipleVariantsValidator(new[] { 1, 2, 3 }, abcMultipleQuestion);
+
             var diseases = new Dictionary<string, Disease>
             {
-                {"0", new Disease("0", "Disease A (temperature[36-37.5], result[1])", new Dictionary<string, ISymptomValidator>
+                {"0", new Disease("0", "Disease A (temperature[36-37.5], result[1], multiple_result[1, 2])", new Dictionary<string, ISymptomValidator>
                 {
                     { "temperature", temperatureValidator1 },
                     { "question", abcValidator1 },
+                    { "multiple_question", abcMultipleValidator1 },
                 }) },
-                {"1", new Disease("1", "Disease B (temperature[37-38], result[2])", new Dictionary<string, ISymptomValidator>
+                {"1", new Disease("1", "Disease B (temperature[37-38], result[2], multiple_result[2, 3])", new Dictionary<string, ISymptomValidator>
                 {
                     { "temperature", temperatureValidator2 },
                     { "question", abcValidator2 },
+                    { "multiple_question", abcMultipleValidator2 },
                 }) },
-                {"2", new Disease("2", "Disease C (temperature[38-39], result[3])", new Dictionary<string, ISymptomValidator>
+                {"2", new Disease("2", "Disease C (temperature[38-39], result[3], multiple_result[1, 3])", new Dictionary<string, ISymptomValidator>
                 {
                     { "temperature", temperatureValidator3 },
                     { "question", abcValidator3 },
+                    { "multiple_question", abcMultipleValidator3 },
                 }) },
-                {"3", new Disease("3", "Disease D (temperature[37.5-38.5], result[1])", new Dictionary<string, ISymptomValidator>
+                {"3", new Disease("3", "Disease D (temperature[37.5-38.5], result[1], multiple_result[1, 2, 3])", new Dictionary<string, ISymptomValidator>
                 {
                     { "temperature", temperatureValidator4 },
                     { "question", abcValidator4 },
+                    { "multiple_question", abcMultipleValidator4 },
                 }) },
             };
 
@@ -56,6 +66,7 @@ namespace Core
             {
                 temperatureQuestion,
                 abcQuestion,
+                abcMultipleQuestion,
             };
 
             var test = new Test(diseases.Values, questions);
