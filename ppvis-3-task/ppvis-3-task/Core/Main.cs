@@ -76,7 +76,7 @@ namespace Core
             var diseasesProvider = new DummyDiseasesStorageProvider(diseases);
             var storageProvider = new DummyStorageProvider(diseasesProvider);
             var authorizationService = new DummyAuthorizationService(storageProvider);
-            var medicamentsProvider = new DummyMedicamentsStorageProvider(
+            var medicamentsProvider = new SmartMedicamentsStorageProvider(
                 new[] 
                 {
                     new Medicament("0", "Medicament A", 3, 7),
@@ -88,6 +88,13 @@ namespace Core
                     new Medicament("3", "Medicament D", 1, 7),
                     new Medicament("4", "Medicament E", 2, 14),
                     new Medicament("5", "Medicament F", 2, 28),
+                },
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    {"0", new[] { "1", "2" } },
+                    {"1", new[] { "0", "2" } },
+                    {"2", new[] { "4" } },
+                    {"4", new[] { "2" } },
                 });
 
             var flow = new WorkFlow();
@@ -100,6 +107,7 @@ namespace Core
                 new Dictionary<string, ITaskHandler>
                     {
                         { "Register", new RegisterMedicamentTask(medicamentsProvider) },
+                        { "Unregister", new UnregisterMedicamentTask(medicamentsProvider) },
                         { "Show all", new ShowAllMedicamentsTask(medicamentsProvider) },
                         { "Show current", new ShowMedicamentsTask(medicamentsProvider) },
                         { "Exit", new ApplicationQuitTask() },
