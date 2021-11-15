@@ -73,10 +73,19 @@ namespace Core
 
             var test = new Test(diseases.Values, questions);
 
+            var medicamentsHistoryProvider = new DummyMedicamentsHistoryStorageProvider(new Dictionary<string, List<string>>
+            {
+                { "0", new List<string> { "0", "1" } },
+            });
+            var medicamentsCompatibilityProvider = new DummyMedicamentsCompatibilityStorageProvider(new Dictionary<string, IEnumerable<string>>
+            {
+                { "0", new List<string> { "2", "3" } },
+            });
+
             var diseasesProvider = new DummyDiseasesStorageProvider(diseases);
             var storageProvider = new DummyStorageProvider(diseasesProvider);
             var authorizationService = new DummyAuthorizationService(storageProvider);
-            var medicamentsProvider = new SmartMedicamentsStorageProvider(
+            var medicamentsProvider = new SmarterMedicamentsStorageProvider(
                 new[] 
                 {
                     new Medicament("0", "Medicament A", 3, 7),
@@ -95,7 +104,9 @@ namespace Core
                     {"1", new[] { "0", "2" } },
                     {"2", new[] { "4" } },
                     {"4", new[] { "2" } },
-                });
+                },
+                medicamentsHistoryProvider,
+                medicamentsCompatibilityProvider);
 
             var flow = new WorkFlow();
 
@@ -110,6 +121,7 @@ namespace Core
                         { "Unregister", new UnregisterMedicamentTask(medicamentsProvider) },
                         { "Show all", new ShowAllMedicamentsTask(medicamentsProvider) },
                         { "Show current", new ShowMedicamentsTask(medicamentsProvider) },
+                        { "Disease finished", new DiseaseFinishedTask(medicamentsProvider, medicamentsHistoryProvider) },
                         { "Exit", new ApplicationQuitTask() },
                     }));
 
