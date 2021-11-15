@@ -122,6 +122,7 @@ namespace Core
                         { "Show all", new ShowAllMedicamentsTask(medicamentsProvider) },
                         { "Show current", new ShowMedicamentsTask(medicamentsProvider) },
                         { "Disease finished", new DiseaseFinishedTask(medicamentsProvider, medicamentsHistoryProvider) },
+                        { "Symptoms changed", new SymptomsChangedTask(new TestingTask(test), new ShowMedicamentsTask(medicamentsProvider), diseasesHistoryProvider) },
                         { "Exit", new ApplicationQuitTask() },
                     }));
 
