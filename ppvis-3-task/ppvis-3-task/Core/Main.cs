@@ -85,7 +85,13 @@ namespace Core
             var diseasesProvider = new DummyDiseasesStorageProvider(diseases);
             var storageProvider = new DummyStorageProvider(diseasesProvider);
             var authorizationService = new DummyAuthorizationService(storageProvider);
-            var medicamentsProvider = new SmarterMedicamentsStorageProvider(
+            var pharmacyProvider = new DummyPharmacyStorageProvider(new Dictionary<string, bool>
+            {
+                { "4", true },
+                { "5", true },
+                { "6", false },
+            });
+            var medicamentsProvider = new SmartestMedicamentsStorageProvider(
                 new[] 
                 {
                     new Medicament("0", "Medicament A", 3, 7),
@@ -106,7 +112,8 @@ namespace Core
                     {"4", new[] { "2" } },
                 },
                 medicamentsHistoryProvider,
-                medicamentsCompatibilityProvider);
+                medicamentsCompatibilityProvider,
+                pharmacyProvider);
 
             var flow = new WorkFlow();
 
