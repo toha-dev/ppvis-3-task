@@ -15,13 +15,15 @@ namespace Core
     {
         private static void DummyInjectorInitialization()
         {
+            var diseasesHistoryProvider = new DummyDiseasesHistoryStorageProvider();
+
             var temperatureQuestion = new NumericQuestion("Your temperature");
             var abcQuestion = new SingleVariantQuestion("Choose one result (1, 2, 3)");
             var abcMultipleQuestion = new MultipleVariantsQuestion("Choose multiple results (1, 2, 3)");
 
             var temperatureValidator1 = new RangeNumericValidator(36f, 37.5f, temperatureQuestion);
             var temperatureValidator2 = new RangeNumericValidator(37f, 38f, temperatureQuestion);
-            var temperatureValidator3 = new RangeNumericValidator(38f, 39f, temperatureQuestion);
+            var temperatureValidator3 = new SmartRangeNumericValidator(38f, 39f, temperatureQuestion, new[] { "1" }, diseasesHistoryProvider);
             var temperatureValidator4 = new RangeNumericValidator(37.5f, 38.5f, temperatureQuestion);
 
             var abcValidator1 = new SingleVariantValidator(1, abcQuestion);
@@ -48,7 +50,7 @@ namespace Core
                     { "question", abcValidator2 },
                     { "multiple_question", abcMultipleValidator2 },
                 }) },
-                {"2", new Disease("2", "Disease C (temperature[38-39], result[3], multiple_result[1, 3])", new Dictionary<string, ISymptomValidator>
+                {"2", new Disease("2", "Disease C (temperature[38-39], result[3], multiple_result[1, 3]) (After A or B)", new Dictionary<string, ISymptomValidator>
                 {
                     { "temperature", temperatureValidator3 },
                     { "question", abcValidator3 },
